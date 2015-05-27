@@ -8,7 +8,7 @@ so for the main service `http://matemonkey.com/api/v1/`
 # Test API
 
 For testing purposes, please don't use the main service. A test API is
-running on "http://playground.matemonkey.com/api/v1" for you to test your apps/scripts.
+running on `http://playground.matemonkey.com/api/v1` for you to test your apps/scripts.
 
 ## Documents
 
