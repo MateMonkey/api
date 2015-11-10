@@ -389,14 +389,21 @@ Request: `dealers/3416`
 
 Provide a JSON document of dealer (see [Dealer](#dealer) and
 make sure that you provide an embedded [Address](#address) document.
-These attributes can not be entered directly using the API: `id`, `currency`, `lat`, `lon`, `slug`.
+These attributes can not be entered directly using the API: `id`, `currency`, `created_at`, `updated_at`, `slug`.
 
 The Dealer document needs to have at least: `name`, `type`, `address`
 
-The Address document needs to have at least: `street`, `city`, `postal`, `country`
+The Address document needs to have at least:
 
+(`street`, `city`, `postal`, `country`) OR (`lat`, `lon`)
 
-### Example
+*Please note:* If all values (address + `lat`/`lon`) are supplied,
+the `lat`/`lon` values take precedence.
+
+Supplying only `lat`/`lon` can for example used in apps with a
+"Create a dealer at my location" button.
+
+### Example using a full address
 
 Request: `dealers`
 
@@ -437,6 +444,48 @@ Result Status: `201 Created`
         "lat": 48.15075035,
         "lon": 11.5601324434141
     }
+}
+```
+
+### Example using only lat & lon
+
+Request: `dealers`
+
+JSON Body:
+
+```json
+{
+    "name": "Example Club",
+    "note": "Created only using lat/lon",
+    "type": "club",
+    "address": {
+        "lat": 48.1402569,
+        "lon": 11.5609371
+    }
+}
+```
+
+Response:
+
+Result Status: `201 Created`
+
+```json
+{
+  "name": "Example Club",
+  "id": 3423,
+  "type": "club",
+  "note": "Created only using lat/lon",
+  "slug": "example-club",
+  "currency": "EUR",
+  "created_at": "2015-11-10T21:56:42+00:00",
+  "address": {
+    "street": "Bahnhofplatz",
+    "country": "Germany",
+    "city": "Munich",
+    "postal": "80335",
+    "lat": 48.1402569,
+    "lon": 11.5609371
+  }
 }
 ```
 
@@ -540,17 +589,20 @@ Request: `dealers?bbox=47.858960625924794,11.21480941772461,48.38699007140056,11
 Simply provide a JSON document of dealer (see [Dealer](#dealer)) and
 overwrite any attribute.
 
-These attributes can not be changed directly using the API: `id`, `currency`, `lat`, `lon`, `slug`.
+These attributes can not be changed directly using the API: `id`, `currency`, `slug`, 'created_at', 'updated_at'.
 
-*Please note:* Making `lat`/`lon` changeable using the API is a planned
-feature (i.e. if the geocoding is wrong) but not yet implemented.
-Since this won't break the API as a whole, the API level won't be
-increased for this!
+When `lat` and `lon` are supplied and the values differ from the current
+values, the position will be updated in the database.
+This update will mark this address as updated using latitude and
+longitude values. This means that any change to `street`, `number` etc.
+will not change `lat` and `lon`.
+This feature can be used to change the position of a dealer when the
+position returned by the geocoding service is not correct.
 
 *Please note:* The `slug` attribute can not be changed by changing the
 dealer's name.
 
-### Example
+### Example changing address details
 
 Request: `dealers/3416`
 
@@ -591,6 +643,50 @@ Result Status: `200 OK`
 
 *Please note:* This request changed `lat` and `lon` automatically since
 the address has been updated.
+
+### Example changing the position
+
+Request: `dealers/3416`
+
+JSON Body:
+
+```json
+{
+    "address": {
+        "lat": "48.15090955",
+        "lon": "11.55982567"
+    }
+}
+```
+
+Response:
+
+Result Status: `200 OK`
+
+```json
+{
+    "name": "Exampledealer",
+    "id": 3416,
+    "type": "retail",
+    "slug": "exampledealer",
+    "currency": "EUR",
+    "created_at": "2015-05-25T15:47:59+00:00",
+    "updated_at": "2015-05-26T14:45:45+00:00",
+    "address": {
+        "street": "Schleißheimerstraße",
+        "number": "42",
+        "country": "Germany",
+        "city": "München",
+        "postal": "80797",
+        "lat": 48.15090955,
+        "lon": 11.55982567
+    }
+}
+```
+
+*Please note:* After this request any change to the address will not
+update `lat`, `lon`. Only updates with `lat`/`lon` will change the
+position!
 
 
 ## Dealer API `dealers/slug/:slug`
