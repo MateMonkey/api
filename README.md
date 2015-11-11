@@ -387,7 +387,7 @@ Request: `dealers/3416`
 | Result Content | Dealer document with embedded address document   |
 
 
-Provide a JSON document of dealer (see [Dealer](#dealer) and
+Provide a JSON document of dealer (see [Dealer](#dealer)) and
 make sure that you provide an embedded [Address](#address) document.
 These attributes can not be entered directly using the API: `id`, `currency`, `created_at`, `updated_at`, `slug`.
 
@@ -589,7 +589,7 @@ Request: `dealers?bbox=47.858960625924794,11.21480941772461,48.38699007140056,11
 Simply provide a JSON document of dealer (see [Dealer](#dealer)) and
 overwrite any attribute.
 
-These attributes can not be changed directly using the API: `id`, `currency`, `slug`, 'created_at', 'updated_at'.
+These attributes can not be changed directly using the API: `id`, `currency`, `slug`, `created_at`, `updated_at`.
 
 When `lat` and `lon` are supplied and the values differ from the current
 values, the position will be updated in the database.
