@@ -495,8 +495,8 @@ Result Status: `201 Created`
 | Request        | `GET`                                            |
 | Parameter      | `None`                                           |
 | URL-Parameter  | `bbox` (optional)                                |
-                 | `type` (optional)                                |
-                 | `product` (optional)                             |
+|                | `type` (optional)                                |
+|                | `product` (optional)                             |
 | Result Type    | `application/json`                               |
 | Result Status  | `200` if successful                              |
 | Result Content | Dealers document with embedded address document  |
@@ -708,7 +708,7 @@ http://matemonkey.com/map/dealer/exampledealer)
 
 ### Example
 
-Request: `dealers/exampledealer`
+Request: `dealers/slug/exampledealer`
 
 ```json
 {
